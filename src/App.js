@@ -9,23 +9,31 @@ function App() {
   const handleInputChange=(e)=>{
     setInputValue(e.target.value);
   }
+
+  const handleAddTodo=()=>{
+    if(inputValue.trim()!==''){
+      setTodos([...todos,{id:Date.now(),text:inputValue,completed:false}]);
+      setInputValue('');
+    }
+  }
+
+  const handleDeleteTodo=(id)=>{
+    setTodos(todos.filter(todo=>todo.id!==id));
+  }
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Welcome to my react learning track</h1>
-        <p>I am learning react</p>
+        <h1>My Todo List</h1>
+        <div>
+          <input type="text" value={inputValue} onChange={handleInputChange} placeholder="Add a new todo" />
+          <button onClick={handleAddTodo}>Add</button>
+        </div>
         <ul>
-          <li>React</li>
-          <li>Angular</li>
-          <li>Vue</li>
+          {todos.map((todo)=>(<li key={todo.id}>
+            {todo.text}
+            <button onClick={()=>handleDeleteTodo(todo.id)}>Delete</button>
+          </li>))}
         </ul>
-        <a
-        className="App-link"
-        href="https://github.com/horizon14"
-        target="_blank"
-        rel="noopener noreferrer">
-          查看我的Github
-        </a>
       </header>
     </div>
   );
