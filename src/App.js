@@ -1,24 +1,31 @@
 import logo from './logo.svg';
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 function App() {
 
-  const [todos,setTodos]=useState([]);
-  const [inputValue,setInputValue]=useState('');
-  const handleInputChange=(e)=>{
+  const [todos, setTodos] = useState([]);
+  const [inputValue, setInputValue] = useState('');
+  const [completedTodos, setCompletedTodos] = useState([]);
+
+  const handleInputChange = (e) => {
     setInputValue(e.target.value);
   }
 
-  const handleAddTodo=()=>{
-    if(inputValue.trim()!==''){
-      setTodos([...todos,{id:Date.now(),text:inputValue,completed:false}]);
+  const handleAddTodo = () => {
+    if (inputValue.trim() !== '') {
+      setTodos([...todos, { id: Date.now(), text: inputValue, completed: false }]);
       setInputValue('');
     }
   }
 
-  const handleDeleteTodo=(id)=>{
-    setTodos(todos.filter(todo=>todo.id!==id));
+  const handleDeleteTodo = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  }
+
+  const handleCompleteTodo = (id) => {
+    setCompletedTodos([...completedTodos, todos.find(todo => todo.id === id)]);
+    setTodos(todos.filter(todo => todo.id !== id));
   }
   return (
     <div className="App">
@@ -29,11 +36,18 @@ function App() {
           <button onClick={handleAddTodo}>Add</button>
         </div>
         <ul>
-          {todos.map((todo)=>(<li key={todo.id}>
+          {todos.map((todo) => (<li key={todo.id}>
             {todo.text}
-            <button onClick={()=>handleDeleteTodo(todo.id)}>Delete</button>
+            <button onClick={() => handleDeleteTodo(todo.id)}>Delete</button>
+            <button onClick={() => handleCompleteTodo(todo.id)}>Complete</button>
           </li>))}
         </ul>
+        <h2>Completed Todos</h2>
+        <div>
+          {completedTodos.map((todo) => (
+            <li key={todo.id}>{todo.text}</li>
+          ))}
+        </div>
       </header>
     </div>
   );
