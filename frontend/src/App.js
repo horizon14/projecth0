@@ -27,6 +27,10 @@ function App() {
     setCompletedTodos([...completedTodos, todos.find(todo => todo.id === id)]);
     setTodos(todos.filter(todo => todo.id !== id));
   }
+  const handleRefactorTodo = (id) => {
+    setCompletedTodos(completedTodos.filter(todo => todo.id !== id))
+    setTodos([...todos, completedTodos.find(todo => todo.id === id)])
+  }
   return (
     <div className="App">
       <header className="App-header">
@@ -43,11 +47,14 @@ function App() {
           </li>))}
         </ul>
         <h2>Completed Todos</h2>
-        <div>
+        <ul>
           {completedTodos.map((todo) => (
-            <li key={todo.id}>{todo.text}</li>
+            <li key={todo.id}>
+              {todo.text}
+              <button onClick={() => handleRefactorTodo(todo.id)}>Refactor</button>
+            </li>
           ))}
-        </div>
+        </ul>
       </header>
     </div>
   );
