@@ -47,7 +47,7 @@ export class TodoController {
     }
   }
 
-  @Post(':id/toggle')
+  @Post(':id/completed')
   async toggleCompleted(@Param('id', ParseIntPipe) id: number): Promise<Todo> {
     try {
       return await this.todoService.toggleCompleted(id);
