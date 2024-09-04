@@ -48,9 +48,9 @@ export class TodoController {
   }
 
   @Post(':id/toggle')
-  async toggleDone(@Param('id', ParseIntPipe) id: number): Promise<Todo> {
+  async toggleCompleted(@Param('id', ParseIntPipe) id: number): Promise<Todo> {
     try {
-      return await this.todoService.toggleDone(id);
+      return await this.todoService.toggleCompleted(id);
     } catch (error) {
       throw new HttpException('Failed to toggle todo status', HttpStatus.INTERNAL_SERVER_ERROR);
     }

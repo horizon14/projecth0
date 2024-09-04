@@ -24,14 +24,14 @@ export class TodoService {
     return this.prisma.todo.findUnique({ where: { id } });
   }
 
-  async toggleDone(id: number): Promise<Todo> {
+  async toggleCompleted(id: number): Promise<Todo> {
     const todo = await this.prisma.todo.findUnique({ where: { id } });
     if (!todo) {
       throw new Error('Todo not found');
     }
     const updatedTodo = await this.prisma.todo.update({
       where: { id },
-      data: { isDone: !todo.isDone }
+      data: { completed: !todo.completed }
     })
     return updatedTodo;
   }
