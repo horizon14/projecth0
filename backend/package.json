@@ -29,7 +29,10 @@
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "@prisma/client": "^5.x.x"
+    "@prisma/client": "^5.x.x",
+    "@nestjs/websockets": "^10.0.0",
+"@nestjs/platform-socket.io": "^10.0.0",
+"socket.io": "^4.7.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

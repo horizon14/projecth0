@@ -84,7 +84,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>My Todo List</h1>
-        {Loading && <p>Loading...</p>}
+        {loading && <p>Loading...</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <div>
           <input type="text" value={inputValue} onChange={handleInputChange} placeholder="Add a new todo" />
