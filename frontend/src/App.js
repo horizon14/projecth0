@@ -8,20 +8,21 @@ function App() {
   const [inputValue, setInputValue] = useState('');
   const [completedTodos, setCompletedTodos] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchTodos();
-  },[])
+  }, [])
 
-  const fetchTodos=async()=>{
-    try{
+  const fetchTodos = async () => {
+    try {
       setLoading(true);
-      const response=await axios.get('http://localhost:3000/todos');
+      const response = await axios.get('http://localhost:3000/todos');
       setTodos(response.data);
       setError(null);
-    }catch(err){
+    } catch (err) {
       setError(err.message);
-    }finally{
+    } finally {
       setLoading(false);
     }
   }
@@ -32,37 +33,42 @@ function App() {
 
   const handleAddTodo = async () => {
     if (inputValue.trim() !== '') {
-      try{
-        const response=await axios.post('http://localhost:3000/todos',{text: inputValue, completed: false });
+      try {
+        const response = await axios.post('http://localhost:3000/todos', { text: inputValue, completed: false });
         setTodos([...todos, response.data]);
         setInputValue('');
-      }catch(err){
+      } catch (err) {
         setError('Failed to add todo');
       }
 
     }
   }
 
-  const handleDeleteTodo =async (id) => {
-    try{
+  const handleDeleteTodo = async (id) => {
+    try {
       await axios.delete(`http://localhost:3000/todos/${id}`);
       setTodos(todos.filter(todo => todo.id !== id));
-    }catch(err){
+    } catch (err) {
       setError('Failed to delete todo');
     }
-    
+
   }
 
-  const handleCompletedTodo=async (id)=>{
-    try{
-      const response=await axios.post(`http://localhost:3000/todos/${id}/completed`);
-      const updatedTodo=response.data;
-
-      setTodos(prevTodos=>prevTodos.map(todo=>todo.id===id?updatedTodo:todo)); 
-      
-      // setTodos()
-    }catch(err){
-      setError('Failed to toggle todo');
+  const handleCompletedTodoStatus = async (id) => {
+    try {
+      setLoading(true);
+      const response = await axios.post(`http://localhost:3000/todos/${id}/completed`)
+      const updatedTodo = response.data;
+      setTodos(prevTodos => prevTodos.map(todo => todo.id === id ? updatedTodo : todo))
+      if (updatedTodo.completed) {
+        setCompletedTodos(prevCompleted => [...prevCompleted, updatedTodo])
+      } else {
+        setCompletedTodos(prevCompleted => prevCompleted.filter(todo => todo.id !== id))
+      }
+    } catch (err) {
+      setError('Failed to update completed status')
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -78,15 +84,19 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>My Todo List</h1>
+        {Loading && <p>Loading...</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <div>
           <input type="text" value={inputValue} onChange={handleInputChange} placeholder="Add a new todo" />
-          <button onClick={handleAddTodo}>Add</button>
+          <button onClick={handleAddTodo} disabled={loading}>
+            {loading ? 'Adding...' : 'Add Todo'}
+          </button>
         </div>
         <ul>
           {todos.map((todo) => (<li key={todo.id}>
             {todo.text}
             <button onClick={() => handleDeleteTodo(todo.id)}>Delete</button>
-            <button onClick={() => handleCompleteTodo(todo.id)}>Complete</button>
+            <button onClick={() => handleCompletedTodoStatus(todo.id)}>Complete</button>
           </li>))}
         </ul>
         <h2>Completed Todos</h2>
@@ -94,7 +104,7 @@ function App() {
           {completedTodos.map((todo) => (
             <li key={todo.id}>
               {todo.text}
-              <button onClick={() => handleRefactorTodo(todo.id)}>Refactor</button>
+              <button onClick={() => handleCompletedTodoStatus(todo.id)}>Refactor</button>
             </li>
           ))}
         </ul>
