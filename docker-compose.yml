@@ -16,8 +16,7 @@ services:
       - "3000:3000"
     depends_on:
       - db
-    environment:
-      DATABASE_URL: postgresql://myuser:mypassword@db:5432/mydatabase
+    environment: DATABASE_URL:${DATABASE_URL}
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
