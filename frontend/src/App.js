@@ -54,6 +54,7 @@ function App() {
 
   }
 
+  //Completed Todo
   const handleCompletedTodoStatus = async (id) => {
     try {
       setLoading(true);
