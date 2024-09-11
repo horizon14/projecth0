@@ -11,6 +11,8 @@ interface Todo{
   completed:boolean;
 }
 
+const API_URL=process.env.NEXT_PUBLIC_API_URL||'http://localhost:3000';
+
 export default function Home() {
 
   const [todos,setTodos]=useState<Todo[]>([]);
@@ -26,7 +28,7 @@ export default function Home() {
   const fetchTodos=async()=>{
     try{
       setLoading(true);
-      const response=await axios.get<Todo[]>('http://localhost:3000/todos');
+      const response=await axios.get<Todo[]>(`${API_URL}/todos`);
       setTodos(response.data);
       setError(null);
     }catch(err){
@@ -39,6 +41,18 @@ export default function Home() {
   const handleInputChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
     setInputValue(e.target.value);
   }
+
+  const handleAddTodo= async ()=>{
+    if(inputValue.trim()!==''){
+      try{
+        const response= await axios.post<Todo>(`${API_URL}/todos`)
+      }catch(err){
+
+      }
+    }
+
+  }
+
   }
   //   <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
   //     <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
